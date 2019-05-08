@@ -1,0 +1,67 @@
+                    ---------------------------
+                    /*REGISTER MOBILE FIRST*/
+                    ---------------------------
+                    /*cambio esto aca*/
+
+@font-face {
+font-family: Wrestlemania;
+src: url(../Fonts/wrestlemania/WRESTLEMANIA.ttf);
+}
+
+@font-face {
+font-family: Frutiger;
+src: url(../Fonts/frutiger/FrutigerLTStd-Cn.otf);
+}
+
+@font-face {
+font-family: Milestone;
+src: url(../Fonts/milestone/MilestoneFreeVersion-Script.otf);
+}
+
+html{
+    overflow-x: hidden;
+  }
+  
+  body{
+    overflow-x: hidden;
+  }
+
+  *{
+      box-sizing: border-box;
+      margin:0 auto;
+      padding: 0;
+  }
+
+  @keyframes modal {
+    0% {left: -1000px;}
+    100%{left:0;}
+  }
+
+  .card{
+      margin-top: 40%;
+      margin-bottom: 10%;
+      
+  }
+/* -----------------------MEDIAQUERIES---------------------- */
+
+
+@media (min-width: 451px) and (max-width: 767px) {
+.card{
+    margin-top: 30%;
+    margin-bottom: 10%;
+}
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+    .card{
+        margin-top: 20%;
+        margin-bottom: 5%;
+    }
+}
+
+@media screen and (min-width: 980px){
+    .card{
+        margin-top: 10%;
+        margin-bottom: 3%;
+    }
+}
