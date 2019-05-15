@@ -8,3 +8,6 @@ require 'classes/session.php';
 require 'classes/user.php';
 require 'classes/validator.php';
 require 'classes/database.php';
+
+$validator = new Validator();
+$db = new Database('usuarios.json');

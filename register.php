@@ -1,18 +1,25 @@
 <?php
-  include_once("controladores/funciones.php"); //1) Incluid las funciones.
+  include_once("loader.php"); //1) Incluid las funciones.
+  $errores = array();
+ 
   if($_POST){   //2) Si el usuario apretó submit..
-    $errores = validar($_POST); //3) Validación de errores.
-
+   
+    $avatar = null;
+    $user = new User($_POST['name'], $_POST['email'], $_POST['pass']);
+    $errores = $validator->validate($user, $_POST['pass-ver'], $db); //3) Validación de errores.
+    
     if(count($errores) === 0){
+     
     // Armar un registro para guardarlo.
     // En caso de haber un ávatar, armarlo antes del registro
-    
-    $avatar = crearAvatar($_FILES);
-    $registro = nuevoRegistro($_POST, $avatar);
+        $avatar = $_FILES;
+        $file = $db->crearAvatar($avatar);
+        $user->setAvatar($file);
+        $db->guardar($user);
     // Guardar registro EN UN ARCHIVO JSON(Crear función "guardar").
-    guardar($registro);
+    
     //Si sale todo bien nos vamos al inicio de la página donde nos registr.)
-    header("location: login.php");
+    redirect('login.php');
     //Cortamos la ejecución.
     exit;
     }
@@ -49,7 +56,7 @@
         <b>Pero no te desanimes!</b> Si no tienes nada que ofrecer, que
         sea de interés para tu ofertante, el puede subastártelo!
         <br>
-        <b> <i> Bienvenido a VINTRASH, donde el deshecho de uno es
+        <b> <i> Bienvenido a VINTRASH, donde el desecho de uno es
         el tesoro de otro. </i> </b>
       </p>
     </div>
@@ -57,7 +64,7 @@
     <div class="cajita2">
      <!-- Mostrar errores al usuario. -->
         <?php
-          if(isset($errores)):?>
+          if(count($errores)>0):?>
            <ul class="alert alert-danger">
             <?php
              foreach ($errores as $key => $value): ?>
@@ -70,8 +77,8 @@
 
             <h1>Registro!</h1>
             <form class="formularioRegister" action="" method="POST" enctype="multipart/form-data">
-                <input class="inputForm" type="text" name="name" placeholder="Usuario" value="<?=isset($errores["name"])? "":inputUser("name") ;?>"> <!--persistencia de datos -->
-                <input class="inputForm" type="text" name="email" placeholder="Correo electrónico" value="<?=isset($errores["email"])? "":inputUser("email") ;?>"><!--persistencia de datos :D-->
+                <input class="inputForm" type="text" name="name" placeholder="Usuario" value=""> <!--persistencia de datos -->
+                <input class="inputForm" type="text" name="email" placeholder="Correo electrónico" value=""><!--persistencia de datos :D-->
                 <input class="inputForm" type="password" name="pass" placeholder="Contraseña">
                 <input class="inputForm" type="password" name="pass-ver" placeholder="Confirmar contraseña">
                 <input  type="file" name="avatar" value=""/>

@@ -2,11 +2,11 @@
 
  class Database
 {
-    private $imagen;
+    private $archivoJson;
 
-    public function __construct($imagen)
+    public function __construct($archivoJson)
     {
-        $this->imagen = $imagen;
+        $this->archivoJson = $archivoJson;
     }
 
 public function crearAvatar($imagen)
@@ -25,48 +25,38 @@ public function crearAvatar($imagen)
     }
 
 
-public function guardar($usuario)
- {
-    $jsonUsuario = json_encode($usuario);
-    file_put_contents('usuarios.json', $jsonUsuario. PHP_EOL, FILE_APPEND);
- }
-
-
-
-public function buscaBase()
-{
-    $datosjson = file_get_contents("usuarios.json");
-    $datosjson = explode(PHP_EOL,$datosjson);
-    array_pop($datosjson);
-    foreach ($datosjson as  $usuario) {
-    $baseDatosUsuarios[]= json_decode($usuario,true);
-        }
-    return $baseDatosUsuarios;
-}
-
-
-public function emailExiste($email)
-{
-    $baseDatosUsuarios = buscaBase();
-    
-    foreach ($baseDatosUsuarios as $usuario){
-    if($usuario["email"] === $email){
-    return $usuario;
-        }
-            }
-    return null;
-}
-
-public function estaRegistrado($name){
-    $baseDatosUsuarios = buscaBase();
-   
-    foreach ($baseDatosUsuarios as $usuario){
-        if($usuario["name"] === $name){
-            return $usuario;
-        }
+    public function guardar($usuario)
+    {
+        $usuario=[
+            "name"=>$usuario->getUserName(),
+            "email"=>$usuario->getEmail(),
+            "pass"=> password_hash($usuario->getPassword(),PASSWORD_DEFAULT),
+            "avatar" => $usuario->getAvatar()
+        ];
+        $jsonUsuario = json_encode($usuario);
+        file_put_contents($this->archivoJson, $jsonUsuario. PHP_EOL, FILE_APPEND);
     }
-    return null;
-}
+
+
+
+    public function buscaBase()
+    {
+        $baseDatosUsuarios = [];
+        $datosjson = file_get_contents($this->archivoJson);
+        $datosjson = explode(PHP_EOL,$datosjson);
+        array_pop($datosjson);
+
+        foreach ($datosjson as  $usuario) {
+            $baseDatosUsuarios[]= json_decode($usuario,true);
+        
+        }
+
+        return $baseDatosUsuarios;
+    }
+
+
+  
+
 
 
     public function getImagen()

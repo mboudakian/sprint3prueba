@@ -1,5 +1,5 @@
 <?php 
-include_once("controladores/funciones.php");
+/*include_once("controladores/funciones.php");
 if($_POST){
     $usuario = estaRegistrado($_POST["name"]);
   
@@ -11,10 +11,26 @@ if($_POST){
       }
       
       if(!isset($errores)){ //si NO esta seteado $errores va a ir a tu perfil
-    iniciarSesion($usuario, $_POST);
+    iniciarSesion($usuario, $_POST); //seria el set en el de oop
     header("location: bienvenida.php");
   }
-  }
+}*/
+require 'loader.php';
+
+if($_POST) {
+    $user = new User($_POST['name'], '', $_POST['pass']);
+    $errores = $validator->validate($user, $db);
+    if(count($errores) == 0) {
+        $result = $db->estaRegistrado($user->getUserName(), $db);
+        if($result) {
+            if($auth->validatePassword($user->getPassword(), $result['password'])){
+                //dd('ENTRE');
+                $auth->login($user->getUserName());
+                redirect('bienvenida.php');
+            }
+        }
+    }
+}
 
 
 ?> 
@@ -43,7 +59,7 @@ if($_POST){
         </ul>
       <?php endif;?>
             <form action="" method="POST">
-                <input class="inputLogin" type="text" name="name" placeholder="Usuario" value="<?=(isset($errores["name"])) ?  "" : inputUser("name");?>" placeholder="Nombre de usuario...">
+                <input class="inputLogin" type="text" name="name" placeholder="Usuario" value="" placeholder="Nombre de usuario...">
                 <a href="#">Olvidó su nombre de usuario?</a>
                 <input class="inputLogin" type="password" name="pass" placeholder="Contraseña">
                 <a href="#">Olvidó su contraseña?</a>

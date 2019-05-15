@@ -11,9 +11,9 @@ class Auth
 
     }
 
-    public function validatePassword()
+    public function validatePassword($password, $hash)
     {
-
+        return password_verify($password, $hash);
     }
 
     public function login()

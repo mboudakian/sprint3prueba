@@ -2,21 +2,21 @@
 
 class Validator
 {
-    public function validate(User $user, string $cpassword = "")
+    public function validate(User $user, string $cpassword = "", $db)
     {
         $errores = array();
         if($user->getUserName() !== ""){
             $nombre = trim($user->getUserName());//Trimeo el campo nombre.
+         }
         if($user->getUserName() == ""){ 
-            $errores['name'] = "El usuario es obligatorio";
+        $errores['name'] = "El usuario es obligatorio";
         }
-    }
         if($user->getEmail() !== ""){
         $email = trim($user->getEmail());
+        }
         if ($user->getEmail() === "" || !filter_var($user->getEmail(), FILTER_VALIDATE_EMAIL)) {
             $errores['email'] = "El email no es valido";
           }
-        }
         $contraseña = trim($user->getPassword());
         if(empty($user->getPassword())){
             $errores['pass'] = "La contraseña es obligatoria.";
@@ -33,15 +33,16 @@ class Validator
         }
     }
     
-        $hoy = getdate();
-        $hoyY=$hoy["year"];
-        $mayor=$hoyY-18;
-        if($user->getAge() === null){
+       
+        
+        if($_POST['DOBYear'] === 'Year'){
             $errores['DOBYear'] = "Ingrese su fecha de nacimiento por favor";
+            
         }
-        elseif($user->getAge() > $mayor){
+        if(date('Y') - intval($_POST['DOBYear']) < 18){
+            
             $errores['DOBYear'] = "Por políticas de la empresa, sólo se habilitan usuarios mayores de edad";
-        }
+        } 
          //validacion de la edad.
         if(count($_FILES)!=0){
             if($_FILES["avatar"]["error"]!=0){
@@ -57,15 +58,38 @@ class Validator
     
         //validacion de registro con usuario existente (ATENCION!!! TENGO QUE VER COMO ADAPTO ESTO A OBJETOS AUN)
     
-        if(estaRegistrado($_POST["name"]) !== null){
+        if($this->estaRegistrado($_POST["name"], $db) !== null){
             $errores["name"] = "El usuario ya se encuentra en uso";
         }
-        if(emailExiste($_POST["email"]) !== null){
+        if($this->emailExiste($_POST["email"], $db) !== null){
             $errores["email"] = "El email ya se encuentra en uso";
-        }
+        } 
        
         return $errores;
 }
 
+public function emailExiste($email, $db)
+{
+    $baseDatosUsuarios = $db->buscaBase();
+    
+    foreach ($baseDatosUsuarios as $usuario) {
+        if($usuario["email"] === $email) {
+            return $usuario;
+        }
+    }
+    
+    return null;
+}
+
+public function estaRegistrado($name, Database $db){ //es de otro objeto el metodo buscabase() por eso le paso $db
+    $baseDatosUsuarios = $db->buscaBase();
+   
+    foreach ($baseDatosUsuarios as $usuario){
+        if($usuario["name"] === $name){
+            return $usuario;
+        }
+    }
+    return null;
+}
 
 }
