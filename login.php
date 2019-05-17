@@ -19,6 +19,7 @@ require 'loader.php';
 
 if($_POST) {
   
+    if($_POST['name'] != null || $_POST['pass'] !=null){
     $usuario = $db->search($_POST['name']);
     
     $user = new User($usuario['name'],$usuario['email'],$usuario['pass'], null, $usuario['avatar']);
@@ -34,6 +35,7 @@ if($_POST) {
             }
         }
     }
+  }
 }
 
 
@@ -65,7 +67,7 @@ if($_POST) {
             <form action="" method="POST">
                 <input class="inputLogin" type="text" name="name" placeholder="Usuario" value="" placeholder="Nombre de usuario...">
                 <a href="#">Olvidó su nombre de usuario?</a>
-                <input class="inputLogin" type="password" name="pass" placeholder="Contraseña">
+                <input class="inputLogin" type="password" name="pass" placeholder="Contraseña" value="">
                 <a href="#">Olvidó su contraseña?</a>
                 <p>Recordarme<input class="inputLogin" class="check" type="checkbox" name="remember"></p>
                 <button class="submitLogin" type="submit">Enviar</button>
