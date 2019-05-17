@@ -6,7 +6,7 @@
    
     $avatar = null;
     $user = new User($_POST['name'], $_POST['email'], $_POST['pass']);
-    $errores = $validator->validate($user, $_POST['pass-ver'], $db); //3) Validación de errores.
+    $errores = $validator->validate($user, $db, $_POST['pass-ver']); //3) Validación de errores.
     
     if(count($errores) === 0){
      

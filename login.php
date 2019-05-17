@@ -18,14 +18,18 @@ if($_POST){
 require 'loader.php';
 
 if($_POST) {
-    $user = new User($_POST['name'], '', $_POST['pass']);
-    $errores = $validator->validate($user, $db);
+  
+    $usuario = $db->search($_POST['name']);
+    
+    $user = new User($usuario['name'],$usuario['email'],$usuario['pass'], null, $usuario['avatar']);
+    $errores = $validator->validateLogin($user, $db);
     if(count($errores) == 0) {
-        $result = $db->estaRegistrado($user->getUserName(), $db);
+        $result = $validator->estaRegistrado($user->getUserName(), $db);
         if($result) {
-            if($auth->validatePassword($user->getPassword(), $result['password'])){
-                //dd('ENTRE');
-                $auth->login($user->getUserName());
+          if($auth->validatePassword($_POST['pass'], $user->getPassword())){
+                
+                $auth->login($user);
+                
                 redirect('bienvenida.php');
             }
         }

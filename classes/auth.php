@@ -5,20 +5,19 @@ class Auth
     private $userName;
     private $password;
     private $rememberMe;
+    
 
-    public function searchUser()
-    {
-
-    }
 
     public function validatePassword($password, $hash)
     {
         return password_verify($password, $hash);
     }
 
-    public function login()
+    public function login($user)
     {
-
+        Session::set('name', $user->getUserName());
+        Session::set('avatar', $user->getAvatar());
+        Cookie::set('name', $user->getUserName(), 3600);
     }
 
 
@@ -49,5 +48,16 @@ class Auth
     public function setRememberMe($rememberMe)
     {
         $this->rememberMe = $rememberMe;
+    }
+
+   
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
     }
 }

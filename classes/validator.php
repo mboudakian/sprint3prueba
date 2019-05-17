@@ -2,7 +2,7 @@
 
 class Validator
 {
-    public function validate(User $user, string $cpassword = "", $db)
+    public function validate(User $user, $db , string $cpassword = "")
     {
         $errores = array();
         if($user->getUserName() !== ""){
@@ -23,7 +23,7 @@ class Validator
         }elseif (strlen($contraseña) < 6 || (strlen($contraseña) > 22)){
             $errores['pass'] = "La contraseña debe tener entre 6 y 22 caracteres.";
         }
-        elseif (!preg_match('`[a-z]`',$contraseña) || !preg_match('`[A-Z]`',$contraseña)  || !preg_match('`[0-9]`', $user->getPassword())){ /*Se pone || para que corra todas las condiciones y no solo una. Si pongo && y cumple la primera las otras no corren.*/
+        elseif (!preg_match('`[a-z]`',$contraseña) || !preg_match('`[A-Z]`',$contraseña)  || !preg_match('`[0-9]`', $user->getPassword())){ //Se pone || para que corra todas las condiciones y no solo una. Si pongo && y cumple la primera las otras no corren./
             $errores['pass'] = "La contraseña debe tener al menos una letra minúscula, una mayúscula y un número";
         }
         if(isset($cpassword)){
@@ -56,7 +56,7 @@ class Validator
                 
         }
     
-        //validacion de registro con usuario existente (ATENCION!!! TENGO QUE VER COMO ADAPTO ESTO A OBJETOS AUN)
+        //validacion de registro con usuario existente 
     
         if($this->estaRegistrado($_POST["name"], $db) !== null){
             $errores["name"] = "El usuario ya se encuentra en uso";
@@ -92,4 +92,27 @@ public function estaRegistrado($name, Database $db){ //es de otro objeto el meto
     return null;
 }
 
+
+//VALIDADOR DE LOGIN!
+
+public function validateLogin(User $user, $db)
+{
+    $errores = array();
+
+    if($this->estaRegistrado($_POST["name"], $db) == null){
+        $errores['name'] = "Datos incorrectos";
+    }
+    if($_POST["name"] == null){
+        $errores['pass'] = "No deje el campo vacio";
+    }
+    if($_POST["pass"] == null){
+        $errores['pass'] = "No deje el campo vacio";
+    }
+    if(password_verify($_POST["pass"], $user->getPassword())===false){
+        $errores["pass"]= "Alguno de los datos no es correcto";
+      }
+
+
+    return $errores;
+}
 }

@@ -1,8 +1,14 @@
 <?php
-include_once("controladores/funciones.php");
+/*include_once("controladores/funciones.php");
 if(!isset($_SESSION["name"])){
     header("location:login.php");
+}*/
+require 'loader.php';
+if(!isset($_SESSION['name'])){
+  redirect('login.php');
 }
+
+
 ?>
 
 <?php include_once 'includes/__head.php'; ?>
@@ -22,7 +28,7 @@ if(!isset($_SESSION["name"])){
 
 <!--CUERPO DE BIENVENIDA-->
 <div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="imagenesUsuarios/<?=$_SESSION["avatar"];?>" alt="foto usuario"> <!--aca embebo la foto de perfil del usuario en la carta-->
+  <img class="card-img-top" src="imagenesUsuarios/<?= $_SESSION["avatar"];?>" alt="foto usuario"> <!--aca embebo la foto de perfil del usuario en la carta-->
   <div class="card-body">
     <p class="card-text">Bienvenid@ <?=$_SESSION["name"];?></p>
     <h6><a href = "logout.php">Cerrar sesion</a></h6> <!-- aca es el link de cerrar sesion -->

@@ -55,7 +55,18 @@ public function crearAvatar($imagen)
     }
 
 
+    public function search($name)
+    {
+        $database = $this->buscaBase();
+        foreach($database as $user) {
+            if($user['name'] == $name) {
+                return $user;
+            }
+        }
   
+        return false;
+  
+    }
 
 
 
